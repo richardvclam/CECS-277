@@ -2,6 +2,7 @@ package project_one.entities;
 
 import java.util.ArrayList;
 
+import project_one.Util;
 import project_one.pokemons.Pokemon;
 
 /**
@@ -137,6 +138,17 @@ public abstract class Trainer extends Entity {
 	 */
 	public String speak(String speech) {
 		return super.getName() + ": " + speech;
+	}
+	
+	/**
+	 * Battle method calls for the style and move.
+	 * @return
+	 */
+	public int battle() {
+		int style = chooseStyle();
+		int move = chooseMove(style);
+		
+		return getCurrentPokemon().fight(style, move);
 	}
 	
 }

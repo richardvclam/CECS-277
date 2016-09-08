@@ -6,7 +6,7 @@ package project_one.entities;
  * @author Richard Lam
  *
  */
-public class Entity {
+public abstract class Entity {
 
 	/**
 	 * Name of the entity.

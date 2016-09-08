@@ -1,5 +1,7 @@
 package project_one.entities;
 
+import project_one.Util;
+
 /**
  * Player class that has methods modifying potions, pokeballs, money, and returns speech and attack patterns.
  * 
@@ -150,7 +152,9 @@ public class Player extends Trainer {
 	 */
 	@Override
 	public int chooseStyle() {
-		return 0;
+		String[] menu = {"Basic Attack", "Special Attack"};
+		
+		return Util.checkUserInput("Choose an attack type:", menu);
 	}
 
 	/**
@@ -160,7 +164,14 @@ public class Player extends Trainer {
 	 */
 	@Override
 	public int chooseMove(int style) {
-		return 0;
+		switch (style) {
+		case 1:
+			return Util.checkUserInput("Choose an attack:", getCurrentPokemon().displayBasicMenu());
+		case 2:
+			return Util.checkUserInput("Choose an attack:", getCurrentPokemon().displaySpecialMenu());
+		default:
+			return 0;
+		}
 	}
 	
 }

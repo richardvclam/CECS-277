@@ -1,12 +1,12 @@
+package project_one;
+
+import project_one.pokemons.*;
+
 /**
  * Each method in the PokemonMaker class generates either a starter Pokemon, a random Pokemon, or a specific type Pokemon.
  * 
  * @author Richard Lam
  */
-package project_one;
-
-import project_one.pokemons.*;
-
 public class PokemonMaker {
 	
 	/**

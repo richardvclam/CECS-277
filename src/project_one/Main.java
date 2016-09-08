@@ -1,11 +1,3 @@
-/**
- * 
- * Main Pokemon class that handles the main game functions. Asks the user for their Trainer's name and their choice
- * for a starter Pokemon. The game then loops and output the menu screen Walk, Pokecenter, Shop, Display Pokemon, or Quit.
- * 
- * @author Richard Lam
- */
-
 package project_one;
 
 import java.util.Scanner;
@@ -14,6 +6,13 @@ import project_one.entities.Opponent;
 import project_one.entities.Player;
 import project_one.pokemons.*;
 
+/**
+ * 
+ * Main Pokemon class that handles the main game functions. Asks the user for their Trainer's name and their choice
+ * for a starter Pokemon. The game then loops and output the menu screen Walk, Pokecenter, Shop, Display Pokemon, or Quit.
+ * 
+ * @author Richard Lam
+ */
 public class Main {
 
 	public static void main(String[] args) {
@@ -36,7 +35,11 @@ public class Main {
 			
 			switch(response) {
 				case 1:
-					walk(player);
+					if (player.getCurrentPokemon().getHp() > 0) {
+						walk(player);
+					} else {
+						System.out.println(player.speak("I don't think that's a good idea... I should heal my Pokemon first."));
+					}
 					break;
 				case 2:
 					pokeCenter(player);
@@ -90,7 +93,7 @@ public class Main {
 		System.out.println(opp.speak(opp.attackSpeech()));
 		System.out.println(player.speak(player.attackSpeech()));
 		
-		PokemonBattles.pokeBattle(player, opp, opp.getCurrentPokemon());
+		PokemonBattles.opponentBattle(player, opp);
 	}
 	
 	/**
@@ -102,7 +105,7 @@ public class Main {
 		
 		System.out.println("A wild " + wildPokemon.getName() + " has appeared!");
 		
-		PokemonBattles.pokeBattle(player, null, wildPokemon);
+		PokemonBattles.wildPokeBattle(player, wildPokemon);
 	}
 	
 	/**
@@ -164,9 +167,14 @@ public class Main {
 	 */
 	public static void namePokemon(Pokemon pokemon) {
 		Scanner in = new Scanner(System.in);
-		System.out.println("What would you like to name your Pokemon?");
-		String name = in.nextLine();
-		pokemon.setName(name);
+		String[] menu = {"Yes", "No"};
+		int response = Util.checkUserInput("Would you like to name your Pokemon?", menu);
+		
+		if (response == 1) {
+			System.out.println("What would you like to name your Pokemon?");
+			String name = in.nextLine();
+			pokemon.setName(name);
+		}
 	}
 		
 }

@@ -51,8 +51,7 @@ public class Opponent extends Trainer {
 	 */
 	@Override
 	public int chooseStyle() {
-		// TODO Auto-generated method stub
-		return 0;
+		return(int) (Math.random() * 2);
 	}
 
 	/**
@@ -62,8 +61,7 @@ public class Opponent extends Trainer {
 	 */
 	@Override
 	public int chooseMove(int style) {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int) (Math.random() * 3) + 1;
 	}
 	
 	/**

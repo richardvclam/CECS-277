@@ -28,7 +28,7 @@ public class PokemonBattles {
 	 */
 	public static void angryPokemon(Trainer trainer) {
 		int hpLoss = 10;
-		System.out.println(trainer.getCurrentPokemon() + " got hungry and bit you!");
+		System.out.println(trainer.getCurrentPokemon().getName() + " got hungry and bit you!");
 		trainer.loseHp(hpLoss);
 		System.out.println("You lost " + hpLoss + " hp!");
 	}
@@ -64,9 +64,8 @@ public class PokemonBattles {
 	 * Handles the fight, heal, Pokeball, switch Pokemon, run menu, user inputs, and events for the player.
 	 * @param player is your Player
 	 * @param opp is the Opponent
-	 * @param oppPokemon is the opposing Pokemon
 	 */
-	public static void pokeBattle(Player player, Opponent opp, Pokemon oppPokemon) {
+	public static void opponentBattle(Player player, Opponent opp) {
 		boolean fight = true;
 		int response;
 		
@@ -76,12 +75,12 @@ public class PokemonBattles {
 		System.out.println(player.speak(player.getCurrentPokemon().getName() + ", I choose you!"));
 		
 		do {
-			String[] menu = {"Fight", "Use Potion", "Throw Pokeball", "Switch Pokemon", "Run Away"};
+			String[] menu = {"Fight", "Use Potion", "Switch Pokemon", "Run Away"};
 			response = Util.checkUserInput("What should I do?", menu);
 			
 			switch (response) {
 				case 1:
-					fightPokemon(player.getCurrentPokemon(), opp != null ? opp.getCurrentPokemon() : oppPokemon);
+					trainerBattle(player, opp);
 					break;
 				case 2:
 					if (player.getNumPotionsLeft() > 0) {
@@ -92,35 +91,25 @@ public class PokemonBattles {
 					}
 					break;
 				case 3:
-					if (player.getNumPokeballsLeft() > 0 && opp == null) {
-						fight = catchPokemon(player, oppPokemon);
-					} else if (player.getNumPokeballsLeft() > 0 && opp != null) { 
-						System.out.println("You cannot catch someone else's Pokemon!");
-						continue;
-					} else {
-						System.out.println("You ran out of Pokeballs!");
-						continue;
-					}
-					break;
-				case 4:
 					switchPokemon(player);
 					break;
-				case 5:
+				case 4:
 					System.out.println("You've chosen to run away.");
 					fight = false;
 					break;	
 			}
 			
-			if ((opp != null ? opp.getCurrentPokemon().getHp() : oppPokemon.getHp()) > 0 && player.getCurrentPokemon().getHp() > 0 && fight) {
-				wildPokemonAttacks(player.getCurrentPokemon(),  opp != null ? opp.getCurrentPokemon() : oppPokemon);
+			if (opp.getCurrentPokemon().getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight) {
+				trainerBattle(opp, player);
 			} else if (opp != null && canSwitchPokemon(opp) && fight) {
 				switchOppPokemon(opp);
-				//oppPokemon = opp.getCurrentPokemon();
 				System.out.println(opp.getName() + " sent out " + opp.getCurrentPokemon().getName() + ".");
 			} else if (opp != null && !canSwitchPokemon(opp) && fight){
+				player.gainMoney(1000);
 				System.out.println("You've beaten " + opp.getName() + "!");
 				System.out.println(player.speak(player.winSpeech()));
 				System.out.println(opp.speak(opp.lossSpeech()));
+				System.out.println("You gained $1000!");
 				fight = false;
 			}
 			
@@ -134,7 +123,7 @@ public class PokemonBattles {
 					}
 				}
 			}
-		} while ((opp != null ? opp.getCurrentPokemon().getHp() : oppPokemon.getHp()) > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
+		} while (opp.getCurrentPokemon().getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
 	}
 	
 	/**
@@ -346,8 +335,11 @@ public class PokemonBattles {
 		}
 		
 		if (damage > 0) {
-			yourPokemon.loseHp(damage);
 			System.out.println("The wild " + wildPokemon.getName() + " did " + damage + " damage to " + yourPokemon.getName() + ".");
+			if (damage > yourPokemon.getHp()) {
+				damage = yourPokemon.getHp();
+			}
+			yourPokemon.loseHp(damage);
 		}
 		
 		if (yourPokemon.getHp() < 0) {
@@ -355,6 +347,96 @@ public class PokemonBattles {
 		} else {
 			System.out.println(yourPokemon.getName() + " has " + yourPokemon.getHp() + "/" + yourPokemon.getMaxHp() + " HP left.");
 		}
+	}
+	
+	/**
+	 * Event handler for handling trainer battle and damage between two trainers.
+	 * @param attacker is the attacking trainer
+	 * @param defender is the defending trainer
+	 */
+	public static void trainerBattle(Trainer attacker, Trainer defender) {
+		int damage = 0;
+		double elementalBonus = 1;
+		elementalBonus = PokemonBattles.getElementalBonus(attacker.getCurrentPokemon(), defender.getCurrentPokemon());
+		damage = (int) ((double) attacker.battle() * elementalBonus);
+		
+		if (elementalBonus > 1) {
+			System.out.println("It's super effective!");
+		} else if (elementalBonus < 1) {
+			System.out.println("It's not very effective...");
+		}
+		
+		if (damage > 0) {
+			defender.getCurrentPokemon().loseHp(damage);
+			System.out.println(attacker.getCurrentPokemon().getName() + " did " + damage + " damage to " + defender.getCurrentPokemon().getName() + ".");
+		}
+		
+		if (defender.getCurrentPokemon().getHp() < 0) {
+			System.out.println("The " + defender.getCurrentPokemon().getName() + " has fainted!");
+			gainExp(attacker.getCurrentPokemon(), defender.getCurrentPokemon());
+		} else {
+			System.out.println("The " + defender.getCurrentPokemon().getName() + " has " + defender.getCurrentPokemon().getHp() + "/" + defender.getCurrentPokemon().getMaxHp() + " HP left.");
+		}
+	}
+	
+	/**
+	 * Event handler for a wild Pokemon battle. Handles user input for fighting, using a potion, throwing a pokeball, switching Pokemon, and running away.
+	 * @param player is the player
+	 * @param wildPokemon is the wild Pokemon
+	 */
+	public static void wildPokeBattle(Player player, Pokemon wildPokemon) {
+		boolean fight = true;
+		int response;
+		
+		System.out.println(player.speak(player.getCurrentPokemon().getName() + ", I choose you!"));
+		
+		do {
+			String[] menu = {"Fight", "Use Potion", "Throw Pokeball", "Switch Pokemon", "Run Away"};
+			response = Util.checkUserInput("What should I do?", menu);
+			
+			switch (response) {
+				case 1:
+					fightPokemon(player.getCurrentPokemon(), wildPokemon);
+					break;
+				case 2:
+					if (player.getNumPotionsLeft() > 0) {
+						healPokemon(player, player.getCurrentPokemon());
+					} else {
+						System.out.println("You ran out of Potions!");
+						continue;
+					}
+					break;
+				
+				case 3:
+					if (player.getNumPokeballsLeft() > 0) {
+						fight = catchPokemon(player, wildPokemon);
+					} else {
+						System.out.println("You ran out of Pokeballs!");
+						continue;
+					}
+					break;
+					
+				case 4:
+					switchPokemon(player);
+					break;
+				case 5:
+					System.out.println("You've chosen to run away.");
+					fight = false;
+					break;	
+			}
+			
+			if (wildPokemon.getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight) {
+				wildPokemonAttacks(player.getCurrentPokemon(), wildPokemon);
+			}
+			
+			if (player.getCurrentPokemon().getHp() <= 0 && fight) {
+				fight = switchPokemon(player);
+				if (!fight) {
+					System.out.println("All of your Pokemon have fainted! Going back to town now...");
+					System.out.println(player.speak(player.lossSpeech()));
+				}
+			}
+		} while (wildPokemon.getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
 	}
 
 }

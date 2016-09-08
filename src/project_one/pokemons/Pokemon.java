@@ -70,11 +70,12 @@ public abstract class Pokemon extends Entity {
 	}
 	
 	/**
-	 * Increases the Pokemon's level by one.
+	 * Increases the Pokemon's level by one. Also increases the Pokemon's max hp by {@code hpPerLevel}.
 	 */
 	public void levelUp() {
+		final int hpPerLevel = 100;
 		level++;
-		super.incMaxHp(super.getMaxHp());
+		super.incMaxHp(hpPerLevel);
 		exp = 0;
 	}
 	
@@ -163,6 +164,20 @@ public abstract class Pokemon extends Entity {
 	 */
 	public int megaPunch() {
 		return (int) ((level * 1.75) + 30);
+	}
+	
+	/**
+	 * Returns the damage
+	 * @param style
+	 * @param move
+	 * @return
+	 */
+	public int fight(int style, int move) {
+		if (style == 1) {
+			return basicFight(move);
+		} else {
+			return specialFight(move);
+		}
 	}
 	
 }
