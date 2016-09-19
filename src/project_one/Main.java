@@ -1,5 +1,6 @@
 package project_one;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import project_one.entities.Opponent;
@@ -15,13 +16,15 @@ import project_one.pokemons.*;
  */
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		boolean run = true;
 		int response;
 		Scanner in = new Scanner(System.in);
 		
+		Map[] maps = parseMaps();
+		
 		System.out.println("What is your trainer's name?");
-		final Player player = new Player(in.nextLine(), 100);
+		final Player player = new Player(in.nextLine(), 100, maps[0], maps[0].findStartLocation());
 		
 		Pokemon newPokemon = PokemonMaker.makeStarterPokemon();
 		
@@ -36,7 +39,8 @@ public class Main {
 			switch(response) {
 				case 1:
 					if (player.getCurrentPokemon().getHp() > 0) {
-						walk(player);
+						travel(player);
+						//walk(player);
 					} else {
 						System.out.println(player.speak("I don't think that's a good idea... I should heal my Pokemon first."));
 					}
@@ -61,6 +65,91 @@ public class Main {
 		} while (run);
 		
 		in.close();
+	}
+	
+	public static void city(Player player) {
+		boolean run = true;
+		System.out.println("Ahhhh... You just found a city!");
+		do {
+			String[] menu = {"Heal Pokemon at PokeCenter", "Shop at PokeMart", "Leave City"};
+			int response = Util.checkUserInput("What would you like to do?", menu);
+			
+			switch(response) {
+				case 1:
+					pokeCenter(player);
+					break;
+				case 2:
+					if (player.getMoney() > 0) {
+						shop(player);
+					} else {
+						System.out.println(player.getName() + ": I don't have any money left...");
+					}
+					break;
+				case 3:
+					run = false;
+					break;
+			}
+		} while (run);
+	}
+	
+	public static Map[] parseMaps() throws FileNotFoundException {
+		String[] areas = {"Area1.txt", "Area2.txt", "Area3.txt"};
+		Map[] maps = new Map[areas.length];
+		
+		// Creates maps
+		for (int i = 0; i < areas.length; i++) {
+			Map map = new Map();
+			map.parseFile("src/project_one/" + areas[i]);
+			map.setName("Route " + (i+1));
+			maps[i] = map;
+		}
+		
+		// Link maps together
+		for (int i = 0; i < maps.length; i++) {
+			if (i == 0) {
+				maps[i].setPrevMap(maps[maps.length - 1]);
+			} else {
+				maps[i].setPrevMap(maps[i-1]);
+			}
+			
+			if (i == maps.length - 1) {
+				maps[i].setNextMap(maps[0]);
+			} else {
+				maps[i].setNextMap(maps[i+1]);
+			}
+		}
+		
+		return maps;
+	}
+	
+	public static void travel(Player player) {
+		System.out.println("You decided to go on a leisurely stroll.");
+		char response = Util.checkDirection(player);
+		switch (response) {
+		case 'n':
+			System.out.println("You ran into nothing.");
+			break;
+		case 's':
+			System.out.println("You went to the previous area!");
+			player.setCurrentMap(player.getCurrentMap().getPrevMap());
+			player.setLocation(player.getCurrentMap().findEndLocation());
+			break;
+		case 'o':
+			trainerBattle(player);
+			break;
+		case 'w':
+			encounterWildPokemon(player);
+			break;
+		case 'f':
+			System.out.println("You went to the next area!");
+			player.setCurrentMap(player.getCurrentMap().getNextMap());
+			player.setLocation(player.getCurrentMap().findStartLocation());
+			break;
+		case 'c':
+			System.out.println("You found a city!");
+			city(player);
+			break;
+		}
 	}
 	
 	/**

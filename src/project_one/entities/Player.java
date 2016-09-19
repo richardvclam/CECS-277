@@ -1,5 +1,8 @@
 package project_one.entities;
 
+import java.awt.Point;
+
+import project_one.Map;
 import project_one.Util;
 
 /**
@@ -22,17 +25,23 @@ public class Player extends Trainer {
 	 * Amount of money.
 	 */
 	private int money;
+	private Point location;
+	private int level;
+	private Map currentMap;
+	
 
 	/**
 	 * Constructor
 	 * @param name is the name of the Player
 	 * @param hp is the hp of the Player
 	 */
-	public Player(String name, int hp) {
+	public Player(String name, int hp, Map currentMap, Point start) {
 		super(name, hp);
 		potions = 10;
 		pokeballs = 10;
 		money = 1000;
+		location = start;
+		this.currentMap = currentMap;
 	}
 
 	/**
@@ -172,6 +181,67 @@ public class Player extends Trainer {
 		default:
 			return 0;
 		}
+	}
+	
+	public Point getLocation() {
+		return location;
+	}
+	
+	public boolean setLocation(Point p) {
+		location = p;
+		return true;
+	}
+	
+	public Map getCurrentMap() {
+		return currentMap;
+	}
+	
+	public void setCurrentMap(Map map) {
+		currentMap = map;
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+	
+	public void incLevel() {
+		level++;
+	}
+	
+	public char goNorth(Map m) {
+		Point direction = new Point(location.x, location.y - 1);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+	
+	public char goSouth(Map m) {
+		Point direction = new Point(location.x, location.y + 1);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+	
+	public char goEast(Map m) {
+		Point direction = new Point(location.x + 1, location.y);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+	
+	public char goWest(Map m) {
+		Point direction = new Point(location.x - 1, location.y);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
 	}
 	
 }

@@ -81,17 +81,23 @@ public class PokemonMaker {
 	}
 	
 	/**
-	 * Returns the starter Pokemon of the player's choice. The user can choose between Charmander or Pikachu.
+	 * Returns the starter Pokemon of the player's choice. The user can choose between Charmander, Squirtle, Bulbasaur or Pikachu.
 	 * @return a starter Pokemon
 	 */
 	public static Pokemon makeStarterPokemon() {
-		String[] starterMenu = {"Charmander", "Pikachu"};
+		String[] starterMenu = {"Charmander", "Squirtle", "Bulbasaur", "Pikachu"};
 		int starterNum = Util.checkUserInput("Choose your starter pokemon:", starterMenu);
 		switch (starterNum) {
 			case 1: 
 				System.out.println("You have chosen Charmander!");
 				return new Charmander("Charmander", 100, 1);
-			case 2:
+			case 2: 
+				System.out.println("You have chosen Squirtle!");
+				return new Squirtle("Squirtle", 100, 1);
+			case 3: 
+				System.out.println("You have chosen Bulbasaur!");
+				return new Bulbasaur("Bulbasaur", 100, 1);
+			case 4:
 				System.out.println("You have chosen Pikachu!");
 				return new Pikachu("Pikachu", 100, 1);
 			default:
