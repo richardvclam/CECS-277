@@ -3,10 +3,15 @@ package project_one;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Map {
+public class Map implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private Map prev;
 	private Map next;
@@ -42,17 +47,6 @@ public class Map {
 		this.next = next;
 	}
 	
-	public void parseFile(String fileName) throws FileNotFoundException {
-		Scanner in = new Scanner(new File(fileName));
-		
-		for (int i = 0; i < map.length; i++) {
-			String[] str = in.nextLine().split(" ");
-			for (int j = 0; j < str.length; j++) {
-				map[i][j] = str[j].charAt(0);
-			}
-		}
-	}
-	
 	public void printMap() {
 		System.out.println(" ___________ ");
 		for (int i = 0; i < map.length; i++) {
@@ -66,7 +60,21 @@ public class Map {
 	}
 	
 	public void generateArea(int areaNum) {
+		File file = new File("src/project_one/Area" + areaNum + ".txt");
+		Scanner in = null;
 		
+		try {
+			in = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < map.length; i++) {
+			String[] str = in.nextLine().split(" ");
+			for (int j = 0; j < str.length; j++) {
+				map[i][j] = str[j].charAt(0);
+			}
+		}
 	}
 	
 	public char getCharAtLoc(Point p) {

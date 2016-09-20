@@ -95,6 +95,7 @@ public class PokemonBattles {
 					break;
 				case 4:
 					System.out.println("You've chosen to run away.");
+					playerRun(player);
 					fight = false;
 					break;	
 			}
@@ -110,6 +111,7 @@ public class PokemonBattles {
 				System.out.println(player.speak(player.winSpeech()));
 				System.out.println(opp.speak(opp.lossSpeech()));
 				System.out.println("You gained $1000!");
+				player.getCurrentMap().removeOppAtLoc(player.getLocation());
 				fight = false;
 			}
 			
@@ -124,6 +126,34 @@ public class PokemonBattles {
 				}
 			}
 		} while (opp.getCurrentPokemon().getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
+	}
+	
+	private static void playerRun(Player player) {
+		char c = ' ';
+		
+		do {
+			c = ' ';
+			int randDirection = (int) (Math.random()*4);
+			switch (randDirection) {
+				case 0:
+					c = player.goNorth(player.getCurrentMap());
+					break;
+				case 1:
+					c = player.goWest(player.getCurrentMap());
+					break;
+				case 2:
+					c = player.goEast(player.getCurrentMap());
+					break;
+				case 3:
+					c = player.goSouth(player.getCurrentMap());
+					break;
+			}
+			
+			if (c != '0') {
+				break;
+			}
+		} while (c != '0');
+
 	}
 	
 	/**
@@ -410,6 +440,9 @@ public class PokemonBattles {
 				case 3:
 					if (player.getNumPokeballsLeft() > 0) {
 						fight = catchPokemon(player, wildPokemon);
+						if (!fight) {
+							player.getCurrentMap().removeOppAtLoc(player.getLocation());
+						}
 					} else {
 						System.out.println("You ran out of Pokeballs!");
 						continue;
@@ -421,6 +454,7 @@ public class PokemonBattles {
 					break;
 				case 5:
 					System.out.println("You've chosen to run away.");
+					playerRun(player);
 					fight = false;
 					break;	
 			}
@@ -436,7 +470,13 @@ public class PokemonBattles {
 					System.out.println(player.speak(player.lossSpeech()));
 				}
 			}
+			
+			if (wildPokemon.getHp() <= 0) {
+				player.getCurrentMap().removeOppAtLoc(player.getLocation());
+			}
 		} while (wildPokemon.getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
+		
+		
 	}
 
 }

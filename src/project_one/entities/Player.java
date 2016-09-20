@@ -1,6 +1,7 @@
 package project_one.entities;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import project_one.Map;
 import project_one.Util;
@@ -11,8 +12,12 @@ import project_one.Util;
  * @author Richard Lam
  *
  */
-public class Player extends Trainer {
+public class Player extends Trainer implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Amount of potions.
 	 */

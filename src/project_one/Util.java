@@ -78,6 +78,7 @@ public class Util {
 		String[] choices = {"North", "West", "East", "South", "Cancel"};
 		
 		do {
+			c = ' ';
 			System.out.println("\nWhere would you like to go?");
 			System.out.println("Map: " + player.getCurrentMap().getName());
 			player.getCurrentMap().displayMap(player.getLocation());

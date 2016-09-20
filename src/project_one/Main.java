@@ -1,6 +1,12 @@
 package project_one;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 import project_one.entities.Opponent;
@@ -15,22 +21,44 @@ import project_one.pokemons.*;
  * @author Richard Lam
  */
 public class Main {
+	
+	private static File saveFile = new File("pokemon.dat");
 
 	public static void main(String[] args) throws FileNotFoundException {
 		boolean run = true;
-		int response;
+		int response = -1;
 		Scanner in = new Scanner(System.in);
-		
 		Map[] maps = parseMaps();
+		OpponentMaker om = new OpponentMaker();
+		Player player = null;
 		
-		System.out.println("What is your trainer's name?");
-		final Player player = new Player(in.nextLine(), 100, maps[0], maps[0].findStartLocation());
+		if (saveFile.exists()) {
+			String[] menu = {"Yes", "No"};
+			response = Util.checkUserInput("Would you like to load your previous save?", menu);
 		
-		Pokemon newPokemon = PokemonMaker.makeStarterPokemon();
+			if (response == 1) {
+				try {
+					ObjectInputStream load = new ObjectInputStream(new FileInputStream(saveFile));
+					player = (Player) load.readObject();
+					load.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		} 
 		
-		player.addPokemon(newPokemon);
-		player.setCurrentPokemon(newPokemon);
-		namePokemon(player.getCurrentPokemon());
+		if (response == -1 || response == 2) {
+			System.out.println("What is your trainer's name?");
+			player = new Player(in.nextLine(), 100, maps[0], maps[0].findStartLocation());
+			
+			Pokemon newPokemon = PokemonMaker.makeStarterPokemon();
+			
+			player.addPokemon(newPokemon);
+			player.setCurrentPokemon(newPokemon);
+			namePokemon(player.getCurrentPokemon());
+		}
 		
 		do {
 			String[] menu = {"Walk Around", "Heal Pokemon at PokeCenter", "Shop at PokeMart", "Display Pokemon", "Quit Game"};
@@ -40,7 +68,6 @@ public class Main {
 				case 1:
 					if (player.getCurrentPokemon().getHp() > 0) {
 						travel(player);
-						//walk(player);
 					} else {
 						System.out.println(player.speak("I don't think that's a good idea... I should heal my Pokemon first."));
 					}
@@ -99,7 +126,7 @@ public class Main {
 		// Creates maps
 		for (int i = 0; i < areas.length; i++) {
 			Map map = new Map();
-			map.parseFile("src/project_one/" + areas[i]);
+			map.generateArea(i+1);
 			map.setName("Route " + (i+1));
 			maps[i] = map;
 		}
@@ -122,6 +149,10 @@ public class Main {
 		return maps;
 	}
 	
+	/**
+	 * Takes the player on a walk and generates a random event. The events are between encountering a wild Pokemon or a trainer battle.
+	 * @param player is the Player
+	 */
 	public static void travel(Player player) {
 		System.out.println("You decided to go on a leisurely stroll.");
 		char response = Util.checkDirection(player);
@@ -146,9 +177,15 @@ public class Main {
 			player.setLocation(player.getCurrentMap().findStartLocation());
 			break;
 		case 'c':
-			System.out.println("You found a city!");
 			city(player);
 			break;
+		}
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile));
+			out.writeObject(player);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -175,6 +212,7 @@ public class Main {
 	/**
 	 * Trainer battle event generates a random opponent and starts the PokeBattle.
 	 * @param player is the Player
+	 * @return 
 	 */
 	private static void trainerBattle(Player player) {
 		Opponent opp = OpponentMaker.makeRandomOpponent();
@@ -188,6 +226,7 @@ public class Main {
 	/**
 	 * This is the encountering a wild Pokemon event that generates a random Pokemon and starts the PokeBattle.
 	 * @param player is the Player
+	 * @return 
 	 */
 	private static void encounterWildPokemon(Player player) {
 		Pokemon wildPokemon = PokemonMaker.makeWildPokemon();

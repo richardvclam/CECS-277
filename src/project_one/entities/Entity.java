@@ -1,13 +1,19 @@
 package project_one.entities;
 
+import java.io.Serializable;
+
 /**
  * Entity class is a basic entity object with a name and hp.
  * 
  * @author Richard Lam
  *
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Name of the entity.
 	 */
