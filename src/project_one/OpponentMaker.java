@@ -59,27 +59,6 @@ public class OpponentMaker {
 		
 	}
 	
-	private static ArrayList<Opponent> opponentData;
-	
-	public OpponentMaker() {
-		File file = new File("src/project_one/OpponentList.txt");
-		Scanner in = null;
-		opponentData = new ArrayList<Opponent>();
-		
-		try {
-			in = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		while (in.hasNextLine()) {
-			Opponent opponent = new Opponent(in.nextLine(), Integer.parseInt(in.nextLine()), in.nextLine().replace("#", "\n"), in.nextLine(), in.nextLine());
-
-			opponentData.add(opponent);
-		}
-		
-	}
-	
 	/**
 	 * Generates a random opponent with a set of Pokemons. The opponent can be either a rival trainer or a malicious Team Rocket.
 	 * @return a random opponent

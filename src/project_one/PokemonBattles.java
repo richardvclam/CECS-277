@@ -128,34 +128,6 @@ public class PokemonBattles {
 		} while (opp.getCurrentPokemon().getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
 	}
 	
-	private static void playerRun(Player player) {
-		char c = ' ';
-		
-		do {
-			c = ' ';
-			int randDirection = (int) (Math.random()*4);
-			switch (randDirection) {
-				case 0:
-					c = player.goNorth(player.getCurrentMap());
-					break;
-				case 1:
-					c = player.goWest(player.getCurrentMap());
-					break;
-				case 2:
-					c = player.goEast(player.getCurrentMap());
-					break;
-				case 3:
-					c = player.goSouth(player.getCurrentMap());
-					break;
-			}
-			
-			if (c != '0') {
-				break;
-			}
-		} while (c != '0');
-
-	}
-	
 	/**
 	 * Event that occurs when a player runs from battle. It makes them run in a random and valid direction.
 	 * @param player
@@ -507,8 +479,6 @@ public class PokemonBattles {
 				player.getCurrentMap().removeOppAtLoc(player.getLocation());
 			}
 		} while (wildPokemon.getHp() > 0 && player.getCurrentPokemon().getHp() > 0 && fight);
-		
-		
 	}
 
 }
