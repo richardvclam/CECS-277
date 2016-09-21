@@ -1,5 +1,9 @@
 package project_one.entities;
 
+import java.awt.Point;
+import java.io.Serializable;
+
+import project_one.Map;
 import project_one.Util;
 
 /**
@@ -8,8 +12,13 @@ import project_one.Util;
  * @author Richard Lam
  *
  */
-public class Player extends Trainer {
+public class Player extends Trainer implements Serializable {
 	
+	/**
+	 * Serial ID
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Amount of potions.
 	 */
@@ -22,17 +31,31 @@ public class Player extends Trainer {
 	 * Amount of money.
 	 */
 	private int money;
-
+	/**
+	 * Current location.
+	 */
+	private Point location;
+	/**
+	 * Current level.
+	 */
+	private int level;
+	/**
+	 * Current map.
+	 */
+	private Map currentMap;
+	
 	/**
 	 * Constructor
 	 * @param name is the name of the Player
 	 * @param hp is the hp of the Player
 	 */
-	public Player(String name, int hp) {
+	public Player(String name, int hp, Map currentMap, Point start) {
 		super(name, hp);
 		potions = 10;
 		pokeballs = 10;
 		money = 1000;
+		location = start;
+		this.currentMap = currentMap;
 	}
 
 	/**
@@ -172,6 +195,115 @@ public class Player extends Trainer {
 		default:
 			return 0;
 		}
+	}
+	
+	/**
+	 * Returns the player's current location.
+	 * @return the player's current location
+	 */
+	public Point getLocation() {
+		return location;
+	}
+	
+	/**
+	 * Returns boolean value whether the location is valid.
+	 * @param p is the location to set
+	 * @return true or false if location is within bounds or not
+	 */
+	public boolean setLocation(Point p) {
+		if (currentMap.getCharAtLoc(p) != '0') {
+			location = p;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the player's current map.
+	 * @return the player's current map
+	 */
+	public Map getCurrentMap() {
+		return currentMap;
+	}
+	
+	/**
+	 * Sets the player's current map.
+	 * @param map the current map
+	 */
+	public void setCurrentMap(Map map) {
+		currentMap = map;
+	}
+	
+	/**
+	 * Returns the player's level.
+	 * @return the player's level
+	 */
+	public int getLevel() {
+		return level;
+	}
+	
+	/**
+	 * Increments the player's level.
+	 */
+	public void incLevel() {
+		level++;
+	}
+
+	/**
+	 * Returns the char from moving north.
+	 * @param m the map
+	 * @return the char from moving north
+	 */
+	public char goNorth(Map m) {
+		Point direction = new Point(location.x, location.y - 1);
+		boolean valid = setLocation(direction);
+		if (valid) { 
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+
+	/**
+	 * Returns the char from moving south.
+	 * @param m the map
+	 * @return the char from moving south
+	 */
+	public char goSouth(Map m) {
+		Point direction = new Point(location.x, location.y + 1);
+		boolean valid = setLocation(direction);
+		if (valid) { 
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+
+	/**
+	 * Returns the char from moving east.
+	 * @param m the map
+	 * @return the char from moving east
+	 */
+	public char goEast(Map m) {
+		Point direction = new Point(location.x + 1, location.y);
+		boolean valid = setLocation(direction);
+		if (valid) { 
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
+	}
+	
+	/**
+	 * Returns the char from moving west.
+	 * @param m the map
+	 * @return the char from moving west
+	 */
+	public char goWest(Map m) {
+		Point direction = new Point(location.x - 1, location.y);
+		boolean valid = setLocation(direction);
+		if (valid) { 
+			m.reveal(direction);
+		}
+		return m.getCharAtLoc(direction);
 	}
 	
 }

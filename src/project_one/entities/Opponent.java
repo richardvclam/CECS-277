@@ -12,14 +12,21 @@ public class Opponent extends Trainer {
 	 * Opponent type
 	 */
 	private int type;
+	/**
+	 * Opponent's attack speech, win speech, and loss speech.
+	 */
+	private String attackSpeech, winSpeech, lossSpeech;
 
 	/**
 	 * Constructor
 	 * @param name is the name of the opponent
 	 * @param hp is the hp of the opponent
 	 */
-	public Opponent(String name, int hp) {
+	public Opponent(String name, int hp, String attackSpeech, String lossSpeech, String winSpeech) {
 		super(name, hp);
+		this.attackSpeech = attackSpeech;
+		this.winSpeech = winSpeech;
+		this.lossSpeech = lossSpeech;
 	}
 
 	/**
@@ -27,7 +34,7 @@ public class Opponent extends Trainer {
 	 */
 	@Override
 	public String attackSpeech() {
-		return "You picked the wrong day to mess with me!";
+		return attackSpeech;
 	}
 
 	/**
@@ -35,7 +42,7 @@ public class Opponent extends Trainer {
 	 */
 	@Override
 	public String winSpeech() {
-		return "Haha! I knew you were a weakling.";
+		return winSpeech;
 	}
 
 	/**
@@ -43,7 +50,7 @@ public class Opponent extends Trainer {
 	 */
 	@Override
 	public String lossSpeech() {
-		return "Oh no! You'll regret this!";
+		return lossSpeech;
 	}
 
 	/**

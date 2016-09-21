@@ -1,8 +1,8 @@
 package project_one.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import project_one.Util;
 import project_one.pokemons.Pokemon;
 
 /**
@@ -11,8 +11,12 @@ import project_one.pokemons.Pokemon;
  * @author Richard
  *
  */
-public abstract class Trainer extends Entity {
+public abstract class Trainer extends Entity implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Trainer's current pokemon.
 	 */
