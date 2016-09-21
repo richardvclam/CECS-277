@@ -15,7 +15,10 @@ import project_one.Util;
 public class Player extends Trainer implements Serializable {
 	
 	/**
+<<<<<<< HEAD
 	 * Serial ID
+=======
+>>>>>>> origin/master
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -31,6 +34,7 @@ public class Player extends Trainer implements Serializable {
 	 * Amount of money.
 	 */
 	private int money;
+<<<<<<< HEAD
 	/**
 	 * Current location.
 	 */
@@ -44,6 +48,13 @@ public class Player extends Trainer implements Serializable {
 	 */
 	private Map currentMap;
 	
+=======
+	private Point location;
+	private int level;
+	private Map currentMap;
+	
+
+>>>>>>> origin/master
 	/**
 	 * Constructor
 	 * @param name is the name of the Player
@@ -197,14 +208,18 @@ public class Player extends Trainer implements Serializable {
 		}
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the player's current location.
 	 * @return the player's current location
 	 */
+=======
+>>>>>>> origin/master
 	public Point getLocation() {
 		return location;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns boolean value whether the location is valid.
 	 * @param p is the location to set
@@ -223,26 +238,40 @@ public class Player extends Trainer implements Serializable {
 	 * Returns the player's current map.
 	 * @return the player's current map
 	 */
+=======
+	public boolean setLocation(Point p) {
+		location = p;
+		return true;
+	}
+	
+>>>>>>> origin/master
 	public Map getCurrentMap() {
 		return currentMap;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Sets the player's current map.
 	 * @param map the current map
 	 */
+=======
+>>>>>>> origin/master
 	public void setCurrentMap(Map map) {
 		currentMap = map;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the player's level.
 	 * @return the player's level
 	 */
+=======
+>>>>>>> origin/master
 	public int getLevel() {
 		return level;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Increments the player's level.
 	 */
@@ -259,10 +288,21 @@ public class Player extends Trainer implements Serializable {
 		Point direction = new Point(location.x, location.y - 1);
 		boolean valid = setLocation(direction);
 		if (valid) { 
+=======
+	public void incLevel() {
+		level++;
+	}
+	
+	public char goNorth(Map m) {
+		Point direction = new Point(location.x, location.y - 1);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+>>>>>>> origin/master
 			m.reveal(direction);
 		}
 		return m.getCharAtLoc(direction);
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Returns the char from moving south.
@@ -273,10 +313,18 @@ public class Player extends Trainer implements Serializable {
 		Point direction = new Point(location.x, location.y + 1);
 		boolean valid = setLocation(direction);
 		if (valid) { 
+=======
+	
+	public char goSouth(Map m) {
+		Point direction = new Point(location.x, location.y + 1);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+>>>>>>> origin/master
 			m.reveal(direction);
 		}
 		return m.getCharAtLoc(direction);
 	}
+<<<<<<< HEAD
 
 	/**
 	 * Returns the char from moving east.
@@ -287,11 +335,19 @@ public class Player extends Trainer implements Serializable {
 		Point direction = new Point(location.x + 1, location.y);
 		boolean valid = setLocation(direction);
 		if (valid) { 
+=======
+	
+	public char goEast(Map m) {
+		Point direction = new Point(location.x + 1, location.y);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+>>>>>>> origin/master
 			m.reveal(direction);
 		}
 		return m.getCharAtLoc(direction);
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the char from moving west.
 	 * @param m the map
@@ -301,6 +357,12 @@ public class Player extends Trainer implements Serializable {
 		Point direction = new Point(location.x - 1, location.y);
 		boolean valid = setLocation(direction);
 		if (valid) { 
+=======
+	public char goWest(Map m) {
+		Point direction = new Point(location.x - 1, location.y);
+		if (m.getCharAtLoc(direction) != '0') {
+			location = direction;
+>>>>>>> origin/master
 			m.reveal(direction);
 		}
 		return m.getCharAtLoc(direction);

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Scanner;
 
 public class Map implements Serializable {
+<<<<<<< HEAD
 
 	/**
 	 * Serial ID
@@ -37,19 +38,36 @@ public class Map implements Serializable {
 	 * Constructor
 	 * Creates a 5x5 map and revealed array.
 	 */
+=======
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String name;
+	private Map prev;
+	private Map next;
+	private char[][] map;
+	private boolean[][] revealed;
+	
+>>>>>>> origin/master
 	public Map() {
 		map = new char[5][5];
 		revealed = new boolean[5][5];
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the map's name.
 	 * @return the map's name
 	 */
+=======
+>>>>>>> origin/master
 	public String getName() {
 		return name;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Sets the map's name.
 	 * @param name to set the map to
@@ -71,18 +89,32 @@ public class Map implements Serializable {
 	 * Sets the previous linked map.
 	 * @param prev the previous map to link this current map to
 	 */
+=======
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Map getPrevMap() {
+		return prev;
+	}
+	
+>>>>>>> origin/master
 	public void setPrevMap(Map prev) {
 		this.prev = prev;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the next linked map.
 	 * @return the next linked map
 	 */
+=======
+>>>>>>> origin/master
 	public Map getNextMap() {
 		return next;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Sets the next linked map.
 	 * @param next the next map to link this current map to
@@ -95,6 +127,24 @@ public class Map implements Serializable {
 	 * Reads a text file to generate the map area objects/events.
 	 * @param areaNum is the area number of the map
 	 */
+=======
+	public void setNextMap(Map next) {
+		this.next = next;
+	}
+	
+	public void printMap() {
+		System.out.println(" ___________ ");
+		for (int i = 0; i < map.length; i++) {
+			System.out.print("| ");
+			for (int j = 0; j < map.length; j++) {
+				System.out.print(map[i][j] + " ");
+			}
+			System.out.println("|");
+		}
+		System.out.println(" ___________ ");
+	}
+	
+>>>>>>> origin/master
 	public void generateArea(int areaNum) {
 		File file = new File("src/project_one/Area" + areaNum + ".txt");
 		Scanner in = null;
@@ -113,11 +163,14 @@ public class Map implements Serializable {
 		}
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Returns the char at a specific location on the map.
 	 * @param p the location of the char to return
 	 * @return the char of the location
 	 */
+=======
+>>>>>>> origin/master
 	public char getCharAtLoc(Point p) {
 		try {
 			return map[(int) p.getY()][(int) p.getX()];
@@ -126,10 +179,13 @@ public class Map implements Serializable {
 		}
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Prints the map.
 	 * @param p is the point where the player is currently at
 	 */
+=======
+>>>>>>> origin/master
 	public void displayMap(Point p) {
 		System.out.println(" ----------- ");
 		for (int i = 0; i < map.length; i++) {
@@ -147,10 +203,13 @@ public class Map implements Serializable {
 		System.out.println(" ----------- ");
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Finds the start location of the map.
 	 * @return the start location of the map
 	 */
+=======
+>>>>>>> origin/master
 	public Point findStartLocation() {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map.length; j++) {
@@ -162,10 +221,13 @@ public class Map implements Serializable {
 		return null;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Finds the end location of the map.
 	 * @return the end location of the map
 	 */
+=======
+>>>>>>> origin/master
 	public Point findEndLocation() {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map.length; j++) {
@@ -177,18 +239,24 @@ public class Map implements Serializable {
 		return null;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Sets a specific point to true on the map.
 	 * @param p the point to set to true on the map
 	 */
+=======
+>>>>>>> origin/master
 	public void reveal(Point p) {
 		revealed[(int) p.getY()][(int) p.getX()] = true;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Replaces the char at a specific point to 'n'.
 	 * @param p the point to set to 'n' on the map
 	 */
+=======
+>>>>>>> origin/master
 	public void removeOppAtLoc(Point p) {
 		map[(int) p.getY()][(int) p.getX()] = 'n';
 	}

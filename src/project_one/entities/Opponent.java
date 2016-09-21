@@ -12,9 +12,12 @@ public class Opponent extends Trainer {
 	 * Opponent type
 	 */
 	private int type;
+<<<<<<< HEAD
 	/**
 	 * Opponent's attack speech, win speech, and loss speech.
 	 */
+=======
+>>>>>>> origin/master
 	private String attackSpeech, winSpeech, lossSpeech;
 
 	/**

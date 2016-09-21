@@ -22,9 +22,12 @@ import project_one.pokemons.*;
  */
 public class Main {
 	
+<<<<<<< HEAD
 	/**
 	 * Global save file.
 	 */
+=======
+>>>>>>> origin/master
 	private static File saveFile = new File("pokemon.dat");
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -153,6 +156,101 @@ public class Main {
 	
 	/**
 	 * Takes the player on a walk and generates a random event depending on what char they run into. Saves the player data into a file after each event.
+	 * @param player is the Player
+	 */
+	public static void travel(Player player) {
+		System.out.println("You decided to go on a leisurely stroll.");
+		char response = Util.checkDirection(player);
+		switch (response) {
+		case 'n':
+			System.out.println("You ran into nothing.");
+			break;
+		case 's':
+			System.out.println("You went to the previous area!");
+			player.setCurrentMap(player.getCurrentMap().getPrevMap());
+			player.setLocation(player.getCurrentMap().findEndLocation());
+			break;
+		case 'o':
+			trainerBattle(player);
+			break;
+		case 'w':
+			encounterWildPokemon(player);
+			break;
+		case 'f':
+			System.out.println("You went to the next area!");
+			player.setCurrentMap(player.getCurrentMap().getNextMap());
+			player.setLocation(player.getCurrentMap().findStartLocation());
+			break;
+		case 'c':
+			city(player);
+			break;
+		}
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile));
+			out.writeObject(player);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void city(Player player) {
+		boolean run = true;
+		System.out.println("Ahhhh... You just found a city!");
+		do {
+			String[] menu = {"Heal Pokemon at PokeCenter", "Shop at PokeMart", "Leave City"};
+			int response = Util.checkUserInput("What would you like to do?", menu);
+			
+			switch(response) {
+				case 1:
+					pokeCenter(player);
+					break;
+				case 2:
+					if (player.getMoney() > 0) {
+						shop(player);
+					} else {
+						System.out.println(player.getName() + ": I don't have any money left...");
+					}
+					break;
+				case 3:
+					run = false;
+					break;
+			}
+		} while (run);
+	}
+	
+	public static Map[] parseMaps() throws FileNotFoundException {
+		String[] areas = {"Area1.txt", "Area2.txt", "Area3.txt"};
+		Map[] maps = new Map[areas.length];
+		
+		// Creates maps
+		for (int i = 0; i < areas.length; i++) {
+			Map map = new Map();
+			map.generateArea(i+1);
+			map.setName("Route " + (i+1));
+			maps[i] = map;
+		}
+		
+		// Link maps together
+		for (int i = 0; i < maps.length; i++) {
+			if (i == 0) {
+				maps[i].setPrevMap(maps[maps.length - 1]);
+			} else {
+				maps[i].setPrevMap(maps[i-1]);
+			}
+			
+			if (i == maps.length - 1) {
+				maps[i].setNextMap(maps[0]);
+			} else {
+				maps[i].setNextMap(maps[i+1]);
+			}
+		}
+		
+		return maps;
+	}
+	
+	/**
+	 * Takes the player on a walk and generates a random event. The events are between encountering a wild Pokemon or a trainer battle.
 	 * @param player is the Player
 	 */
 	public static void travel(Player player) {
