@@ -2,18 +2,36 @@ package project_three;
 
 import java.io.Serializable;
 
+/**
+ * Pattern class that holds the String value of a pattern.
+ * @author Richard Lam
+ */
 public class Pattern implements Serializable {
 
+	/**
+	 * String pattern 
+	 */
 	private String pattern;
 	
+	/**
+	 * Constructor
+	 * @param pattern value of the pattern to instantiate with
+	 */
 	public Pattern(String pattern) {
 		this.pattern = pattern;
 	}
 	
+	/**
+	 * Returns the string value of the pattern.
+	 * @return the string value of the pattern
+	 */
 	public String getPattern() {
 		return pattern;
 	}
 	
+	/**
+	 * Checks if two Pattern objects are equal to each other.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Pattern) {
@@ -23,27 +41,12 @@ public class Pattern implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Returns a hashcode value for Pattern.
+	 */
 	@Override
 	public int hashCode() {
 		return pattern.hashCode();
-	}
-	
-	public int[] getCount() {
-		int f = 0, w = 0, g = 0;
-		
-		for (int i = 0; i < pattern.length(); i++) {
-			char c = pattern.charAt(i);
-			if (c == 'F') {
-				f++;
-			} else if (c == 'W') {
-				w++;
-			} else {
-				g++;
-			}
-		}
-		
-		int[] res = {f, w, g};
-		return res;
 	}
 
 }

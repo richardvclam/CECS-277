@@ -8,14 +8,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
+/**
+ * Pokemon Mind Reader game that makes a prediction based on the player's past patterns.
+ * @author Richard Lam
+ */
 public class MindReaderGame {
-	
-	/**
-	 * Global save file.
-	 */
-	private static File saveFile = new File("fwg.dat");
 
 	public static void main(String[] args) {
+		File saveFile = new File("fwg.dat");
 		boolean run = true;
 		Computer opp = new Computer();
 		int response;
@@ -61,9 +61,7 @@ public class MindReaderGame {
 	}
 	
 	/**
-	 * Displays a question with answer choices. Checks the user's input repeatedly until valid.
-	 * @param question is the question to ask
-	 * @param choices is the array of answer choices
+	 * Displays the basic Fire, Water, Grass, and Quit menu. Checks the user's input repeatedly until valid.
 	 * @return the selection choice
 	 */
 	public static int checkUserInput() {
@@ -94,7 +92,11 @@ public class MindReaderGame {
 		return response;
 	}
 	
-	
+	/**
+	 * Check for a valid response from a yes or no question.
+	 * @param question the question to ask the user
+	 * @return the answer choice
+	 */
 	public static int checkYesNo(String question) {
 		Scanner in = new Scanner(System.in);
 		int response = -1;
