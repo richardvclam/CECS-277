@@ -4,23 +4,6 @@ import java.util.ArrayList;
 
 public class Heap {
 	
-	public class Node<T> {
-		private T data;
-		
-		public Node(T data) {
-			this.data = data;
-		}
-		
-		public T getData() {
-			return data;
-		}
-		
-		public void setData(T data) {
-			this.data = data;
-		}
-		
-	}
-	
 	private ArrayList<Node> heap;
 	
 	public Heap() {
@@ -47,7 +30,7 @@ public class Heap {
 		return 2*i+2;
 	}
 	
-	public Node<Comparable> getNodeAt(int i) {
+	public Node getNodeAt(int i) {
 		if (heap.get(i) == null) {
 			return null;
 		} else {
@@ -60,7 +43,7 @@ public class Heap {
 		int index = heap.size() - 1;
 		
 		//while (index > 0 && getNodeAt(getPLoc(index)).getData() > n.getData()) {
-		while (index > 0 && getNodeAt(getPLoc(index)).getData().compareTo(n.getData()) > 0) {
+		while (index > 0 && ((Comparable) getNodeAt(getPLoc(index)).getData()).compareTo(n.getData()) > 0) {
 			heap.set(index, getNodeAt(getPLoc(index)));
 			index = getPLoc(index);
 		}
@@ -83,12 +66,12 @@ public class Heap {
 					Node<Comparable> child = getNodeAt(getLCLoc(index));
 					int childLoc = getLCLoc(index);
 					if (getRCLoc(index) <= end) {
-						if (getNodeAt(getRCLoc(index)).getData().compareTo(child.getData()) < 0) {
+						if (((Comparable) getNodeAt(getRCLoc(index)).getData()).compareTo(child.getData()) < 0) {
 							child = getNodeAt(getRCLoc(index));
 							childLoc = getRCLoc(index);
 						}
 					}
-					if (child.getData().compareTo(root.getData()) < 0) {
+					if ((child.getData()).compareTo(root.getData()) < 0) {
 						heap.set(index, child);
 						index = childLoc;
 					} else {
@@ -105,7 +88,7 @@ public class Heap {
 	
 	public void printHeap() {
 		for (int i = 0; i < heap.size(); i++) {
-			System.out.print(heap.get(i).getData() + " ");
+			System.out.println((i+1) + ") " + heap.get(i).getData() + " ");
 		}
 		System.out.println();
 	}

@@ -13,6 +13,22 @@ public class Song implements Comparable<Song> {
 		this.album = artist;
 		this.rating = rating;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getArtist() {
+		return artist;
+	}
+	
+	public String getAlbum() {
+		return album;
+	}
+	
+	public int getRating() {
+		return rating;
+	}
 
 	@Override
 	public int compareTo(Song s) {
