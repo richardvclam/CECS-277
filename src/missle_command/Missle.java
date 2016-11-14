@@ -31,9 +31,11 @@ public class Missle {
 		//System.out.println(moveAmtY);
 		moveAmtX = moveAmtX * speed / magnitude;
 		moveAmtY = moveAmtY * speed / magnitude;
+		/*
 		System.out.println(moveAmtX);
 		System.out.println(moveAmtY);
 		System.out.println("Magnitude: " + magnitude);
+		*/
 		active = true;
 	}
 	
@@ -53,7 +55,6 @@ public class Missle {
 	
 	public void move() {
 		ticksElapsed++;
-		//location.translate((int)moveAmtX, (int)moveAmtY);
 		location.setLocation(start.getX() + (moveAmtX * ticksElapsed), start.getY() + (moveAmtY * ticksElapsed));
 		if (type == 0) {
 			if (location.y < end.y) {

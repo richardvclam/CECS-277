@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 public class Frame extends JFrame {
 	
 	private int frameX = 400;
-	private int frameY = 400;
+	private int frameY = 200;
 	private int frameWidth = 500;
 	private int frameHeight = 500;
 	private static Panel panel;

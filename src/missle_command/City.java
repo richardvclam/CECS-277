@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 public class City extends Rectangle {
 	
 	private boolean active;
-	private boolean hit;
 
 	public City(int x, int y) {
 		this.setRect(x, y, 30, 20);
