@@ -4,6 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Jukebox class main reads from a "songs.txt" file and adds them into a heap. The
+ * user can then display the list of songs, display the current song, add a new song
+ * to the list, play the next song, rate the current song, or quit the program.
+ * @author rvclam
+ *
+ */
 public class Jukebox {
 	
 	public static void main(String[] args) {
@@ -13,14 +20,15 @@ public class Jukebox {
 			File file = new File("src/project_four/songs.txt");
 			in = new Scanner(file);
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 		
-		Heap heap = new Heap();
+		Heap<Song> heap = new Heap<Song>();
 		
+		// Reads song from the file
 		while (in.hasNextLine()) {
 			String[] taskString = in.nextLine().split(",");
-			heap.addNode(new Node<Comparable>(new Song(taskString[0], taskString[1], taskString[2], Integer.parseInt(taskString[3]))));
+			heap.addNode(new Song(taskString[0], taskString[1], taskString[2], Integer.parseInt(taskString[3])));
 		}
 		
 		String[] menu = {"Display the list of song", "Display current song", "Add a new song to list",
@@ -32,15 +40,15 @@ public class Jukebox {
 			
 			switch (response) {
 			case 1:
-				if (heap.getSize() > 0) {
+				if (!heap.isEmpty()) {
 					heap.printHeap();
 				} else {
 					System.out.println("You currently have no songs.");
 				}
 				break;
 			case 2:
-				if (heap.getSize() > 0) {
-					System.out.println("Now playing '" + heap.getNodeAt(0).getData().toString() + "'.");
+				if (!heap.isEmpty()) {
+					System.out.println("Now playing '" + heap.getNodeAt(0).toString() + "'.");
 				} else {
 					System.out.println("You currently have no songs.");
 				}
@@ -52,29 +60,29 @@ public class Jukebox {
 				String artist = input.nextLine();
 				System.out.println("Enter the album: ");
 				String album = input.nextLine();
-				System.out.println("Enter the artist: ");
+				System.out.println("Enter the rating: ");
 				int rating = input.nextInt();
-				heap.addNode(new Node<Comparable>(new Song(title, artist, album, rating)));
+				heap.addNode(new Song(title, artist, album, rating));
 				break;
 			case 4:
-				if (heap.getSize() > 0) {
+				if (!heap.isEmpty()) {
 					heap.removeMin();
 				}
-				if (heap.getSize() > 0) {
-					System.out.println("Now playing '" + heap.getNodeAt(0).getData().toString() + "'.");
+				if (!heap.isEmpty()) {
+					System.out.println("Now playing '" + heap.getNodeAt(0).toString() + "'.");
 				} else {
 					System.out.println("You currently have no songs.");
 				}
 				break;
 				
 			case 5:
-				if (heap.getSize() > 0) {
+				if (!heap.isEmpty()) {
 					System.out.println("Please enter a new rating: ");
 					int newRating = input.nextInt();
-					Song currentSong = (Song) heap.getNodeAt(0).getData();
+					Song currentSong = (Song) heap.getNodeAt(0);
 					Song tempSong = new Song(currentSong.getTitle(), currentSong.getArtist(), currentSong.getAlbum(), newRating);
 					heap.removeMin();
-					heap.addNode(new Node<Comparable>(tempSong));
+					heap.addNode(tempSong);
 				} else {
 					System.out.println("You currently have no songs.");
 				}
