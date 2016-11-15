@@ -3,6 +3,7 @@ package missle_command;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -12,8 +13,17 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -27,13 +37,16 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 	private ArrayList<Explosion> explosions;
 	private int round;
 	private int misslesFired;
-	private int citiesLeft;
 	private boolean pause;
 	
 	private JButton btnStart;
 	private JButton btnNextRound;
 	private JButton btnPlayAgain;
 	private Thread attacker;
+	
+	private BufferedImage ground;
+	private BufferedImage tile;
+	private BufferedImage background;
 	
 	public Panel() {
 		round = 0;
@@ -42,36 +55,35 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 		// User Interface
 		setBackground(Color.WHITE);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+		// Start Button
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(this);
 		btnStart.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(btnStart);
-		
+		// Next Round Button
 		btnNextRound = new JButton("Next Round");
 		btnNextRound.addActionListener(this);
 		btnNextRound.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(btnNextRound);
 		btnNextRound.setVisible(false);
-		
+		// Play Again Button
 		btnPlayAgain = new JButton("Play Again");
 		btnPlayAgain.addActionListener(this);
 		btnPlayAgain.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(btnPlayAgain);
 		btnPlayAgain.setVisible(false);
 		
-		// Create the City objects
-		for (int i = 0; i < cities.length; i++) {
-			cities[i] = new City(i*55 + 65 + (i > 2 ? 40 : 0), 400);
-		}
-		
-		// Create the Battery objects
-		for (int i = 0; i < batteries.length; i++) {
-			batteries[i] = new Battery(i * 200 + 20, 390);
-		}
-		
 		missles = new ArrayList<Missle>();
 		explosions = new ArrayList<Explosion>();
+		
+		// Load Resources
+		try {
+			ground = ImageIO.read(new File("src/missle_command/img/ground.png"));
+			tile = ImageIO.read(new File("src/missle_command/img/tile.png"));
+			background = ImageIO.read(new File("src/missle_command/img/back.png"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 		
 		// Starting Mouse Position
 		mouse = new Point(this.getWidth()/2, this.getHeight()/2);
@@ -122,15 +134,30 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (round != 0) {
+			// Draw background
+			for (int i = 0; i <= getWidth()/background.getWidth(); i++) {
+				g.drawImage(background, background.getWidth() * i, -120, this);
+			}
 			if (pause && missles.isEmpty() && citiesLeft() > 0) {
 				btnNextRound.setVisible(true);
 			} else if (pause && missles.isEmpty() && citiesLeft() == 0 && !btnNextRound.isVisible()) {
 				btnPlayAgain.setVisible(true);
 				g.drawString("YOU LOSE", 200, 250);
 			}
+			// Draw ground
+			for (int i = 0; i <= getWidth()/ground.getWidth(); i++) {
+				g.drawImage(ground, ground.getWidth()*i, 430, this);
+			}
+			for (int i = 0; i <= getWidth()/tile.getWidth(); i++) {
+				for (int j = 0; j <= (getHeight() - 430)/tile.getHeight(); j++) {
+					g.drawImage(tile, tile.getWidth()*i, (430 + ground.getHeight()) + tile.getHeight() * j, this);
+				}
+			}
+			// Draw Round numbers
+			g.setColor(Color.WHITE);
+			Font font = new Font("Arial", Font.BOLD, 15);
+			g.setFont(font);
 			g.drawString("Round " + round, 10, 20);
-			g.setColor(new Color(21, 178, 0));
-			g.fillRect(0, 420, 500, 100);
 			
 			// Draw cities
 			g.setColor(Color.BLACK);
@@ -192,7 +219,6 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 				battery.removeMissle();
 			}
 		} catch (NullPointerException ex) {
-			ex.printStackTrace();
 		}
 	}
 
@@ -228,7 +254,6 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 				battery.removeMissle();
 			}
 		} catch (NullPointerException ex) {
-			ex.printStackTrace();
 		}
 	}
 
@@ -299,12 +324,12 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 		if (round == 0) {
 			// Create the City objects
 			for (int i = 0; i < cities.length; i++) {
-				cities[i] = new City(i*55 + 65 + (i > 2 ? 40 : 0), 400);
+				cities[i] = new City(i*55 + 65 + (i > 2 ? 40 : 0), 385);
 			}
 		}
 		// Create the Battery objects
 		for (int i = 0; i < batteries.length; i++) {
-			batteries[i] = new Battery(i * 200 + 20, 390);
+			batteries[i] = new Battery(i * 200 + 20, 380);
 		}
 		pause = false;
 		round++;
@@ -319,6 +344,23 @@ public class Panel extends JPanel implements Runnable, MouseListener, MouseMotio
 			}
 		}
 		return left;
+	}
+	
+	public static void play(String filename) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(new File(filename)));
+			clip.start();
+		} catch (LineUnavailableException e) {
+			System.err.println("Audio Error");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("File Not Found");
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			System.err.println("Wrong File Type");
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

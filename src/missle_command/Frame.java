@@ -7,7 +7,7 @@ public class Frame extends JFrame {
 	private int frameX = 400;
 	private int frameY = 200;
 	private int frameWidth = 500;
-	private int frameHeight = 500;
+	private int frameHeight = 600;
 	private static Panel panel;
 	
 	public Frame() {
@@ -23,5 +23,6 @@ public class Frame extends JFrame {
 		f.setTitle("Mission Command");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+		f.setResizable(false);
 	}
 }

@@ -14,6 +14,7 @@ public class Explosion extends Rectangle {
 		this.setLocation(p);
 		active = true;
 		expanding = true;
+		Panel.play("src/missle_command/sound/explosion_01.wav");
 	}
 	
 	public void draw(Graphics g) {
